@@ -1,0 +1,21 @@
+.auth-nav-container {
+  display: flex;
+  gap: 15px;
+  position: absolute;
+  top: 20px;
+  right: 20px;
+}
+
+.link {
+  text-decoration: none;
+  padding: 10px 20px;
+  border-radius: 5px;
+  font-size: 16px;
+  color: white;
+  background-color: #3b8b66;
+  transition: background-color 0.3s;
+}
+
+.link:hover {
+  background-color: #45a049;
+}

@@ -1,0 +1,12 @@
+.homepage-container {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  padding: 20px;
+  height: 100vh;
+  flex-direction: column;
+}
+
+.home-content {
+  text-align: center;
+}

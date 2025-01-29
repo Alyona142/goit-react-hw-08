@@ -68,7 +68,7 @@ function App() {
           </Routes>
         </Suspense>
       </Layout>
-      <Toaster position="top-right" reverseOrder={false} />
+      {/* <Toaster position="top-right" reverseOrder={false} /> */}
     </>
   );
 }
