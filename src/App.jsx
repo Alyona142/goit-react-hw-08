@@ -1,59 +1,74 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-
 import "./App.css";
-import ContactList from "./components/ContactList/ContactList";
-import SearchBox from "./components/SearchBox/SearchBox";
-import ContactForm from "./components/ContactForm/ContactForm";
 
-import { fetchContacts, addContact, deleteContact } from "./redux/contactsOps";
-import { selectContacts, selectIsLoading } from "./redux/contactsSlice";
-import { selectNameFilter } from "./redux/filtersSlice";
-import { setNameFilter } from "./redux/filtersSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { lazy, Suspense, useEffect } from "react";
+import { Toaster } from "react-hot-toast";
+import { Route, Routes } from "react-router";
+
+import { selectIsRefreshing } from "./redux/auth/selectors";
+import { refreshUser } from "./redux/auth/operations";
+
+import Loader from "./components/Loader/Loader";
+import Layout from "./components/Layout/Layout";
+import RestrictedRoute from "./components/RestrictedRoute/RestrictedRoute";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
+
+const HomePage = lazy(() => import("./pages/HomePage/HomePage"));
+const ContactsPage = lazy(() => import("./pages/ContactsPage/ContactsPage"));
+const LoginPage = lazy(() => import("./pages/LoginPage/LoginPage"));
+const NotFoundPage = lazy(() => import("./pages/NotFoundPage/NotFoundPage"));
+const RegistrationPage = lazy(() =>
+  import("./pages/RegistrationPage/RegistrationPage")
+);
 
 function App() {
   const dispatch = useDispatch();
-  const contacts = useSelector(selectContacts);
-  const filter = useSelector(selectNameFilter);
-  const isLoading = useSelector(selectIsLoading);
+  const isRefreshing = useSelector(selectIsRefreshing);
 
   useEffect(() => {
-    dispatch(fetchContacts());
+    dispatch(refreshUser());
   }, [dispatch]);
 
-  const handleAddContact = (newContact) => {
-    const isDuplicate = contacts.some(
-      (contact) =>
-        contact.name?.toLowerCase() === newContact.name?.toLowerCase()
-    );
-
-    if (isDuplicate) {
-      alert(`${newContact.name} is already in contacts!`);
-      return;
-    }
-
-    dispatch(addContact(newContact));
-  };
-
-  const handleDeleteContact = (id) => {
-    dispatch(deleteContact(id));
-  };
-
-  const handleFilterChange = (filterValue) => {
-    dispatch(setNameFilter(filterValue));
-  };
-
-  const filteredContacts = contacts.filter((contact) =>
-    contact.name?.toLowerCase().includes(filter.toLowerCase())
-  );
+  if (isRefreshing) {
+    return <Loader />;
+  }
 
   return (
     <>
-      <h1>Phone Book</h1>
-      <ContactForm onAdd={handleAddContact} />
-      <SearchBox value={filter} onFilter={handleFilterChange} />
-      {isLoading && <p>Loading contacts...</p>}
-      <ContactList contacts={filteredContacts} onDelete={handleDeleteContact} />
+      <Layout>
+        <Suspense>
+          <Routes>
+            <Route path="/" element={<HomePage />} />
+            <Route
+              path="/register"
+              element={
+                <RestrictedRoute
+                  registedTo="/contacts"
+                  element={<RegistrationPage />}
+                />
+              }
+            />
+            <Route
+              path="/login"
+              element={
+                <RestrictedRoute
+                  registedTo="/contacts"
+                  element={<LoginPage />}
+                />
+              }
+            />
+            <Route
+              path="/contacts"
+              element={
+                <PrivateRoute registedTo="/login" element={<ContactsPage />} />
+              }
+            />
+
+            <Route path="*" element={<NotFoundPage />} />
+          </Routes>
+        </Suspense>
+      </Layout>
+      <Toaster position="top-right" reverseOrder={false} />
     </>
   );
 }
