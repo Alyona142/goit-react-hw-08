@@ -43,7 +43,7 @@ function App() {
               path="/register"
               element={
                 <RestrictedRoute
-                  registedTo="/contacts"
+                  redirectTo="/contacts"
                   element={<RegistrationPage />}
                 />
               }
@@ -52,7 +52,7 @@ function App() {
               path="/login"
               element={
                 <RestrictedRoute
-                  registedTo="/contacts"
+                  redirectTo="/contacts"
                   element={<LoginPage />}
                 />
               }
@@ -60,7 +60,7 @@ function App() {
             <Route
               path="/contacts"
               element={
-                <PrivateRoute registedTo="/login" element={<ContactsPage />} />
+                <PrivateRoute redirectTo="/login" element={<ContactsPage />} />
               }
             />
 

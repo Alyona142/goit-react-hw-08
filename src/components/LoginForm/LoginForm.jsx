@@ -31,10 +31,15 @@ const LoginForm = () => {
 
   const dispatch = useDispatch();
 
-  const handleSubmit = (values, actions) => {
-    dispatch(login(values));
-    actions.setSubmitting(false);
-    actions.resetForm();
+  const handleSubmit = async (values, actions) => {
+    try {
+      await dispatch(login(values)).unwrap();
+      console.log("Login successful");
+    } catch (error) {
+      console.error("Login failed:", error);
+    } finally {
+      actions.setSubmitting(false);
+    }
   };
 
   return (

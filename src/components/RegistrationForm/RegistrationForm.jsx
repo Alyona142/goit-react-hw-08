@@ -5,24 +5,26 @@ import { useId } from "react";
 
 import { useDispatch } from "react-redux";
 import { register } from "../../redux/auth/operations";
-
+import { useNavigate } from "react-router-dom";
 import styles from "./RegistrationForm.module.css";
 
-const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
+const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{8,}$/;
 
 const RegistrationSchema = Yup.object().shape({
   name: Yup.string()
-    .min(3, "Name is too Short!")
-    .max(50, "Name is too Long!")
-    .required("Name is Required field!"),
+    .min(3, "Name is too short!")
+    .max(50, "Name is too long!")
+    .required("Name is a required field!"),
   email: Yup.string()
     .email("Please enter a valid email")
-    .required("Email is required field!"),
+    .required("Email is a required field!"),
   password: Yup.string()
-    .matches(passwordRules, "Please create a stronger password!")
-    .required("Password is required field!"),
+    .matches(
+      passwordRules,
+      "Password must contain at least 8 characters, including 1 uppercase letter, 1 lowercase letter, and 1 number."
+    )
+    .required("Password is a required field!"),
 });
-
 const initialValues = {
   name: "",
   email: "",
@@ -36,8 +38,16 @@ const RegistrationForm = () => {
 
   const dispatch = useDispatch();
 
-  const handleSubmit = (values, actions) => {
-    dispatch(register(values));
+  const navigate = useNavigate();
+
+  const handleSubmit = async (values, actions) => {
+    const response = await dispatch(register(values));
+    console.log("Registration response:", response);
+
+    if (response?.payload?.token) {
+      navigate("/contacts");
+    }
+
     actions.setSubmitting(false);
     actions.resetForm();
   };
