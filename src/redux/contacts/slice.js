@@ -6,8 +6,14 @@ const contactsSlice = createSlice({
   name: "contacts",
   initialState: {
     items: [],
+    filter: "",
     isLoading: false,
     error: null,
+  },
+  reducers: {
+    setFilter(state, action) {
+      state.filter = action.payload;
+    },
   },
   extraReducers: (builder) => {
     builder
@@ -36,5 +42,14 @@ const contactsSlice = createSlice({
       });
   },
 });
+
+export const { setFilter } = contactsSlice.actions;
+
+export const selectFilteredContacts = (state) => {
+  const filter = state.contacts.filter.toLowerCase();
+  return state.contacts.items.filter((contact) =>
+    contact.name.toLowerCase().includes(filter)
+  );
+};
 
 export const contactsReducer = contactsSlice.reducer;

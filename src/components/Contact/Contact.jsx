@@ -2,7 +2,7 @@ import { IoIosContact } from "react-icons/io";
 import { MdPhoneInTalk } from "react-icons/md";
 import s from "./Contact.module.css";
 
-import { deleteContact } from "../../redux/contactsOps";
+import { deleteContact } from "../../redux/contacts/operations";
 
 import { useDispatch } from "react-redux";
 

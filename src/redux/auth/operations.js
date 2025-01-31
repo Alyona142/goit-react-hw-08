@@ -39,13 +39,16 @@ export const register = createAsyncThunk(
     }
   }
 );
-export const logIn = createAsyncThunk(
+export const login = createAsyncThunk(
   "auth/login",
   async (loginData, thunkAPI) => {
     try {
-      return await apiRequest("/users/login", "POST", loginData);
+      const response = await axios.post("/users/login", loginData);
+      setAuthHeader(response.data.token);
+
+      return response.data;
     } catch (error) {
-      return thunkAPI.rejectWithValue(error);
+      return thunkAPI.rejectWithValue(error.message);
     }
   }
 );

@@ -1,16 +1,20 @@
 import { useDispatch, useSelector } from "react-redux";
 import ContactForm from "../../components/ContactForm/ContactForm";
 import SearchBox from "../../components/SearchBox/SearchBox";
+import ContactList from "../../components/ContactList/ContactList";
 import {
+  selectLoading,
   selectError,
   selectFilteredContacts,
-  selectLoading,
 } from "../../redux/contacts/selectors";
-import ContactList from "../../components/ContactList/ContactList";
+
 import ErrorMessage from "../../components/ErrorMessage/ErrorMessage";
 import { useEffect } from "react";
-import { fetchContacts } from "../../redux/contacts/operations";
-
+import {
+  fetchContacts,
+  addContact,
+  deleteContact,
+} from "../../redux/contacts/operations";
 import styles from "./ContactsPage.module.css";
 import Loader from "../../components/Loader/Loader";
 
@@ -20,19 +24,30 @@ const ContactsPage = () => {
   const error = useSelector(selectError);
   const contacts = useSelector(selectFilteredContacts);
 
+  const handleAddContact = (contact) => {
+    dispatch(addContact(contact));
+  };
+
+  const handleDeleteContact = (contactId) => {
+    dispatch(deleteContact(contactId));
+  };
+
   useEffect(() => {
     dispatch(fetchContacts());
   }, [dispatch]);
 
   return (
     <div className={styles.wrapper}>
-      <ContactForm />
+      <ContactForm onAddContact={handleAddContact} />
       <div>
         <SearchBox />
         {loading && <Loader />}
         {error && <ErrorMessage />}
         {contacts.length > 0 && !error && !loading && (
-          <ContactList contacts={contacts} />
+          <ContactList
+            contacts={contacts}
+            onDeleteContact={handleDeleteContact}
+          />
         )}
       </div>
     </div>
