@@ -26,7 +26,7 @@ const ContactForm = () => {
     const newContact = {
       id: nanoid(),
       name: values.username,
-      phone: values.number,
+      number: values.number,
     };
 
     dispatch(addContact(newContact));

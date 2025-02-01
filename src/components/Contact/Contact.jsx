@@ -9,6 +9,11 @@ import { useDispatch } from "react-redux";
 const Contact = ({ id, number, name }) => {
   const dispatch = useDispatch();
 
+  const handleDelete = () => {
+    console.log("Deleting contact ID:", id); // Лог перед видаленням
+    dispatch(deleteContact(String(id))); // Перетворюємо id у рядок
+  };
+
   return (
     <li className={s.contactItem}>
       <div>
@@ -21,13 +26,15 @@ const Contact = ({ id, number, name }) => {
           <a href={`tel: ` + number}>{number}</a>
         </div>
       </div>
-      <button
+
+      <button onClick={handleDelete}>Delete</button>
+      {/* <button
         onClick={() => dispatch(deleteContact(id))}
         type="button"
         aria-label="delete button"
       >
         Delete
-      </button>
+      </button> */}
     </li>
   );
 };
