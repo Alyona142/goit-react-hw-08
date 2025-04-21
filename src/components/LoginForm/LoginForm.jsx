@@ -1,98 +1,83 @@
-import { ErrorMessage, Field, Form, Formik } from "formik";
+import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
-import { CiLogin } from "react-icons/ci";
-import { useId } from "react";
-
+import { Link, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { login } from "../../redux/auth/operations";
+import { toast } from "react-toastify";
+import { login } from "../../redux/Auth/operations.js";
+import { loginSchema } from "../../schemas/schemas.js";
 
-import styles from "./LoginForm.module.css";
+import s from "./LoginForm.module.css";
 
-const passwordRules = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z]).{5,}$/;
-// min 5 characters, 1 upper case letter, 1 lower case letter, 1 numeric digit.
+import { FaEnvelope, FaLock } from "react-icons/fa";
 
-const RegistrationSchema = Yup.object().shape({
-  email: Yup.string()
-    .email("Please enter a valid email")
-    .required("Email is required field!"),
-  password: Yup.string()
-    .matches(passwordRules, "Please create a stronger password!")
-    .required("Password is required field!"),
-});
-
-const initialValues = {
-  email: "",
-  password: "",
-};
+import logo from "../../assets/img/logo_1x.png";
 
 const LoginForm = () => {
-  const emailFieldId = useId();
-  const passwordFieldId = useId();
-
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
-  const handleSubmit = async (values, actions) => {
+  const handleSubmit = async (values, { setSubmitting, resetForm }) => {
     try {
-      await dispatch(login(values)).unwrap();
-      console.log("Login successful");
+      const data = await dispatch(login(values)).unwrap();
+      toast.success(`Welcome, ${data.user.username}!`);
+      resetForm();
+      navigate("/Dashboard");
     } catch (error) {
-      console.error("Login failed:", error);
+      toast.error("Invalid email or password");
     } finally {
-      actions.setSubmitting(false);
+      setSubmitting(false);
     }
   };
 
   return (
     <Formik
-      initialValues={initialValues}
+      initialValues={{ email: "", password: "" }}
+      validationSchema={loginSchema}
       onSubmit={handleSubmit}
-      validationSchema={RegistrationSchema}
     >
       {({ isSubmitting }) => (
-        <Form className={styles.formContact}>
-          <label className={styles.formLabel} htmlFor={emailFieldId}>
-            Email
-          </label>
-          <div className={styles.formInputWrapper}>
-            <Field
-              className={styles.formInput}
-              type="email"
-              inputMode="email"
-              name="email"
-              id={emailFieldId}
-            />
-            <ErrorMessage
-              className={styles.formErrorMessage}
-              name="email"
-              component="div"
-            />
-          </div>
+        <Form className={s.form}>
+          <img className={s.image} src={logo} alt="Logo Image" />
+          <h3 className={s.title}>Money Guard</h3>
 
-          <label className={styles.formLabel} htmlFor={passwordFieldId}>
-            Password
-          </label>
-          <div className={styles.formInputWrapper}>
+          <div className={s.label}>
+            <div className={s.iconWrapper}>
+              <FaEnvelope className={s.icon} />
+            </div>
             <Field
-              className={styles.formInput}
+              className={s.field}
+              type="email"
+              name="email"
+              placeholder="E-mail"
+            />
+            <ErrorMessage name="email" component="div" className={s.error} />
+          </div>
+          <div className={s.label}>
+            <div className={s.iconWrapper}>
+              <FaLock className={s.icon} />
+            </div>
+            <Field
+              className={s.field}
               type="password"
-              inputMode="text"
               name="password"
-              id={passwordFieldId}
+              placeholder="Password"
             />
-            <ErrorMessage
-              className={styles.formErrorMessage}
-              name="password"
-              component="div"
-            />
+            <ErrorMessage name="password" component="div" className={s.error} />
           </div>
 
           <button
-            className={styles.formButton}
             type="submit"
+            className={s.button_reg}
             disabled={isSubmitting}
           >
-            <CiLogin /> <span>LogIn</span>
+            {isSubmitting ? <div className={s.loader}></div> : "LOG IN"}
           </button>
+
+          <Link className={s.link} to="/register">
+            <button type="button" className={s.button_log}>
+              REGISTER
+            </button>
+          </Link>
         </Form>
       )}
     </Formik>

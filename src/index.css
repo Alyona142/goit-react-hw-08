@@ -60,10 +60,10 @@ button {
   cursor: pointer;
   transition: border-color 0.25s ease, color 0.3s ease;
 }
-button:hover {
+/* button:hover {
   color: var(--orange);
   border-color: var(--orange);
-}
+} */
 button:focus,
 button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
@@ -88,19 +88,15 @@ button:focus-visible {
     color: var(--dark);
   }
 
-  a:hover {
-    color: var(--orange);
-  }
   button {
-    color: var(--dark);
-    background-color: var(--light-silver);
-    /* #e6e3e3; */
+    cursor: pointer;
+    border: none;
+    background-color: transparent;
   }
-  button:hover {
-    color: var(--orange);
-    background-color: var(--light-silver);
-  }
-  input {
-    background-color: var(--light-silver);
+
+  img {
+    display: block;
+    max-width: 100%;
+    height: auto;
   }
 }

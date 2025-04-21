@@ -82,3 +82,10 @@ export const refreshUser = createAsyncThunk(
     }
   }
 );
+
+export {
+  register as registerThunk,
+  login as loginThunk,
+  logout as logoutThunk,
+  refreshUser as refreshThunk,
+};
