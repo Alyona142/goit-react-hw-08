@@ -3,24 +3,23 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 20px;
-  border-radius: 5px;
+  gap: 40px;
   margin: 0 auto;
-  width: 320px;
   height: 568px;
-  flex-shrink: 0;
-  margin-top: 20px;
-  background-image: url("/assets/img/bg_mobile_1x.jpg");
-  background: var(--Form-color, rgba(255, 255, 255, 0.1));
-  box-shadow: 0px 4px 60px 0px rgba(0, 0, 0, 0.25);
-  backdrop-filter: blur(50px);
+  min-width: 320px;
+  max-width: 360px;
+  padding: 23px 20px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-image: url(../../assets/img/bg_mobile_1x.jpg);
 }
 
 .title {
   font-family: "Poppins", sans-serif;
   font-weight: 400;
   font-size: 19px;
-  color: #000000;
+  color: #fbfbfb;
 }
 
 .label {
@@ -71,6 +70,24 @@
   );
   color: white;
   border: none;
+}
+
+.passwordWrapper {
+  position: relative;
+  width: 100%;
+}
+
+.toggleButton {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
 }
 
 .button_log {
